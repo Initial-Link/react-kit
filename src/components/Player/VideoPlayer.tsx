@@ -44,7 +44,7 @@ const HIDE_INTERFACE_AFTER_MS = 2000;
 const HIDE_INTERFACE_AFTER_MS_SHORT = 1400;
 
 var quickEnough = [false, false, false, false, false, false, false];
-var timeout: NodeJS.Timeout[] = [];
+var timeout: ReturnType<typeof setTimeout>[] = [];
 function createDoubleClickListener(
   single: () => void,
   double: () => void,

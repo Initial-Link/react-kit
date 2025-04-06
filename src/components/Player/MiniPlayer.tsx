@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useState } from "react";
 import { DEFAULT_MAX_DURATION, PlayerContext } from "./PlayerContext";
 import OndemandVideoIcon from "@mui/icons-material/OndemandVideo";
 
@@ -22,19 +22,19 @@ import { Link } from "@mui/material";
 export default function MiniPlayer() {
   const context = useContext(PlayerContext);
   const [isOpen, setOpen] = useState(false);
-  useEffect(() => {
-    if (
-      !location.pathname.startsWith("/app/watch/") &&
-      context.playing.value &&
-      context.settings.value.allowMiniPlayer
-    ) {
-      context.miniPlayer.set(true);
-    } else if (location.pathname.startsWith("/app/watch/")) {
-      context.miniPlayer.set(false);
-    } else if (context.playing.value) {
-      context.playing.set(false);
-    }
-  }, [location]);
+  //   useEffect(() => {
+  //     if (
+  //       // /**Player ALLOWED */ &&
+  //       context.playing.value &&
+  //       context.settings.value.allowMiniPlayer
+  //     ) {
+  //       context.miniPlayer.set(true);
+  //       //   } else if (/**Player NOT ALLOWED */) {
+  //       //     context.miniPlayer.set(false);
+  //     } else if (context.playing.value) {
+  //       context.playing.set(false);
+  //     }
+  //   }, [context.playerData.value?.id, context.playing.value]);
   if (!context.miniPlayer.value) return <div></div>;
   const isOpenAndAllowed = isOpen && context.miniPlayerVisible.value;
   return (

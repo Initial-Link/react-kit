@@ -98,7 +98,7 @@ export const PlayerContextProvider = (
   const [playerData, setPlayerData] = useState<videoData | undefined>(
     undefined,
   );
-  const [miniPlayer, setMiniPlayer] = useState(false);
+  const [miniPlayer, setMiniPlayer] = useState(true);
   const [miniPlayerVisible, setMiniPlayerVisible] = useState(true);
   const [singleLoop, setSingleLoop] = useState(true);
 
@@ -209,7 +209,7 @@ export const PlayerContextProvider = (
       if (!refAudio.current) return;
 
       if (playing) {
-        if (!audioOnly && !miniPlayer) {
+        if (!audioOnly /* && !miniPlayer */) {
           if (refVideo.current && refAudio.current) {
             refAudio.current.playbackRate = playSpeed;
             refVideo.current.playbackRate = playSpeed;
