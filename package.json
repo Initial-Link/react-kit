@@ -27,7 +27,7 @@
     "eslint": "eslint . --report-unused-disable-directives --max-warnings 0",
     "eslint:fix": "eslint . --fix",
     "check-types": "tsc --noEmit true",
-    "ci": "npm run lint && npm run test --watch=false",
+    "ci": "npm run lint && npm run test -- --watch=false",
     "test": "vitest --config ./vitest.config.ts",
     "release": "npm run ci && npm run build && npm publish",
     "storybook": "storybook dev -p 6006",

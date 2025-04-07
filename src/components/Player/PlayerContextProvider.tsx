@@ -1,7 +1,11 @@
 import { PropsWithChildren, useEffect, useRef, useState } from "react";
 
 import { videoChapters, videoData, videoHeatmap } from "./globals";
-import { PlayerContext, settings } from "./PlayerContext";
+import {
+  PlayerContext,
+  PlayerPlaylistMetaOverwrite,
+  settings,
+} from "./PlayerContext";
 
 export const DEFAULT_MAX_DURATION = 356400;
 const ALLOWED_DE_SYNC_PER_SECOND = 10;
@@ -9,21 +13,28 @@ let performedDeSyncs = 0;
 setInterval(() => (performedDeSyncs = 0), 2000);
 export const PlayerContextProvider = (
   props: PropsWithChildren<{
-    touchHistory: (video: videoData) => void;
-    navigate: (link: videoData) => void;
+    touchHistory?: (video: videoData) => void;
+    navigate?: (link: videoData) => void;
+    initialSettings?: Partial<settings>;
   }>,
 ) => {
   const refVideo = useRef<HTMLVideoElement>(null);
   const refAudio = useRef<HTMLAudioElement>(null);
   const [settings, setSettings] = useState<settings>({
-    autoAudioOnly: false,
-    autoPlay: true,
-    videoBackgroundBloom: true,
-    allowMiniPlayer: true,
+    autoAudioOnly: props.initialSettings?.autoAudioOnly ?? false,
+    autoPlay: props.initialSettings?.autoPlay ?? false,
+    videoBackgroundBloom: props.initialSettings?.videoBackgroundBloom ?? true,
+    allowMiniPlayer: props.initialSettings?.allowMiniPlayer ?? true,
+    sticky: props.initialSettings?.sticky ?? false,
+    stickySpacing: props.initialSettings?.stickySpacing ?? 0,
+    stickyTriggerDistance: props.initialSettings?.stickyTriggerDistance ?? 0,
   });
   const [audioOnly, setAudioOnly] = useState(false);
   const [sourceOverride, setSourceOverride] = useState("");
   const [playing, setPlaying] = useState(false);
+  const [playlistMeta, setPlaylistMeta] = useState<
+    PlayerPlaylistMetaOverwrite | undefined
+  >(undefined);
   const [playlistContent, setPlaylistContent] = useState<videoData[]>([]);
   const [muted, setMuted] = useState(false);
   const [synchronizing, setSynchronizing] = useState(false);
@@ -184,15 +195,16 @@ export const PlayerContextProvider = (
 
     return;
   }, [refVideo.current, refAudio.current, playing, playerData, miniPlayer]);
-
+  const refNavigate = props.navigate ? props.navigate : () => {};
+  const refTouchHistory = props.touchHistory ? props.touchHistory : () => {};
   return (
     <PlayerContext.Provider
       value={{
         targetControllerRef,
         refVideo,
         refAudio,
-        navigate: props.navigate,
-        touchHistory: props.touchHistory,
+        navigate: refNavigate,
+        touchHistory: refTouchHistory,
         volume: {
           value: volume,
           set: (e) => {
@@ -221,6 +233,7 @@ export const PlayerContextProvider = (
           },
         },
         playing: { value: playing, set: setPlaying },
+        playlistMeta: { value: playlistMeta, set: setPlaylistMeta },
         playlistContent: { value: playlistContent, set: setPlaylistContent },
         muted: { value: muted, set: setMuted },
         currentPosition: { value: currentPosition, set: setCurrentPosition },
@@ -277,9 +290,9 @@ export const PlayerContextProvider = (
                 setPlayerData(video);
                 if (miniPlayer) {
                   // Load video without navigate
-                  props.touchHistory(video);
+                  refTouchHistory(video);
                 } else {
-                  props.navigate(video);
+                  refNavigate(video);
                 }
               }
             } else {

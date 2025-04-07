@@ -98,7 +98,6 @@ export default function VideoPlayer(props: {
   ScrollTriggerDistance?: number;
   showInlineTitle?: boolean;
 }) {
-  const ScrollTriggerDistance = props.ScrollTriggerDistance ?? 64;
   const context = useContext(PlayerContext);
   const [fullscreen, setFullscreen] = useState(false);
   const [hideControls, setHideControls] = useState(false);
@@ -185,12 +184,18 @@ export default function VideoPlayer(props: {
   useEffect(() => {
     const backdropChanger = () => {
       const scrollPosition = document.scrollingElement?.scrollTop ?? 0;
-      if (lastKnownY > scrollPosition + ScrollTriggerDistance) {
+      if (
+        lastKnownY >
+        scrollPosition + context.settings.value.stickyTriggerDistance
+      ) {
         setDodgeNav(false);
         lastKnownY = scrollPosition;
         return;
       }
-      if (lastKnownY < scrollPosition - ScrollTriggerDistance) {
+      if (
+        lastKnownY <
+        scrollPosition - context.settings.value.stickyTriggerDistance
+      ) {
         setDodgeNav(true);
         lastKnownY = scrollPosition;
         return;
@@ -273,12 +278,16 @@ export default function VideoPlayer(props: {
         paddingTop: "56.25%",
         position: "relative",
         gridArea: "video",
-        [theme.breakpoints.down("sm")]: {
-          position: "sticky",
-          top: dodgeNav ? 0 : "72px",
-          transition: "top 1s",
-          zIndex: fullscreen ? 10 : 5,
-        },
+        [theme.breakpoints.down("sm")]: context.settings.value.sticky
+          ? {
+              position: "sticky",
+              top: dodgeNav ? 0 : `${context.settings.value.stickySpacing}px`,
+              transition: "top 1s",
+              zIndex: fullscreen ? 10 : 5,
+            }
+          : {
+              zIndex: fullscreen ? 10 : 5,
+            },
         "&::before": {
           backdropFilter: "blur(5px)",
           content: "no-open-quote",
@@ -485,8 +494,11 @@ export default function VideoPlayer(props: {
                     width: "100%",
                     overflow: "hidden",
                     cursor: hideControls ? "none" : "auto",
-                    [theme.breakpoints.up("md")]: {
-                      borderRadius: "16px",
+                    borderRadius: "16px",
+                    [theme.breakpoints.down("md")]: {
+                      borderRadius: context.settings.value.sticky
+                        ? "0px"
+                        : "16px",
                     },
                   }
             }
@@ -767,7 +779,10 @@ export default function VideoPlayer(props: {
                 <Box
                   sx={(theme) => ({
                     position: "absolute",
-                    top: !hideControls && fullscreen ? "40px" : 0,
+                    top:
+                      !hideControls && (fullscreen || props.showInlineTitle)
+                        ? "40px"
+                        : 0,
                     /*
                       hideControls fullscreen 0
                       !hideControls fullscreen 40
