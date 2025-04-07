@@ -1,3 +1,5 @@
+import { PlayerVideoMetaOverwrite } from "./PlayerContext";
+
 export type videoHeatmap = {
   id: string;
   start_time: number;
@@ -9,9 +11,20 @@ export type videoChapters = {
   title: string;
   end_time: number;
 };
+/**
+ * You can append custom metadata to entries by overwriting the internal interface
+ *
+ * @example
+ * declare module "@initial-link/react-kit" {
+ *   export interface PlayerVideoMetaOverwrite {
+ *     uploadTime: number
+ *     anythingElse: any
+ *   }
+ * }
+ *
+ */
 export type videoData = {
   id: string;
-  uploader: string;
   title: string;
   files: {
     video: string;
@@ -19,4 +32,5 @@ export type videoData = {
     subtitles: string | null;
     thumbnail: string;
   };
+  meta: PlayerVideoMetaOverwrite;
 };
