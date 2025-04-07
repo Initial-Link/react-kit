@@ -6,14 +6,13 @@ import {
   Paper,
   Popover,
   Skeleton,
+  styled,
   TooltipProps,
   Typography,
-  styled,
 } from "@mui/material";
 import InfoIcon from "@mui/icons-material/Info";
 import Tooltip, { tooltipClasses } from "@mui/material/Tooltip";
 import { useContext, useEffect, useRef, useState } from "react";
-import { DEFAULT_MAX_DURATION, PlayerContext } from "./PlayerContext";
 import FullscreenIcon from "@mui/icons-material/Fullscreen";
 import FullscreenExitIcon from "@mui/icons-material/FullscreenExit";
 import PauseIcon from "@mui/icons-material/Pause";
@@ -21,21 +20,19 @@ import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import FastForwardIcon from "@mui/icons-material/FastForward";
 import VolumeUpIcon from "@mui/icons-material/VolumeUp";
 import VolumeOffIcon from "@mui/icons-material/VolumeOff";
-
 import RemoveIcon from "@mui/icons-material/Remove";
 import AddIcon from "@mui/icons-material/Add";
 import MusicNoteIcon from "@mui/icons-material/MusicNote";
 import MusicOffIcon from "@mui/icons-material/MusicOff";
-
 import HeadphonesIcon from "@mui/icons-material/Headphones";
 import MovieIcon from "@mui/icons-material/Movie";
-
 import RepeatIcon from "@mui/icons-material/Repeat";
 import RepeatOneIcon from "@mui/icons-material/RepeatOne";
-
 import SubtitlesIcon from "@mui/icons-material/Subtitles";
 import SubtitlesOffIcon from "@mui/icons-material/SubtitlesOff";
 
+import { DEFAULT_MAX_DURATION } from "./PlayerContextProvider";
+import { PlayerContext } from "./PlayerContext";
 import ProgressBar from "./ProgressBar";
 import { parseTimeDuration } from "./convertor";
 import { videoChapters, videoData, videoHeatmap } from "./globals";
@@ -43,15 +40,15 @@ import { videoChapters, videoData, videoHeatmap } from "./globals";
 const HIDE_INTERFACE_AFTER_MS = 2000;
 const HIDE_INTERFACE_AFTER_MS_SHORT = 1400;
 
-var quickEnough = [false, false, false, false, false, false, false];
-var timeout: ReturnType<typeof setTimeout>[] = [];
+const quickEnough = [false, false, false, false, false, false, false];
+const timeout: ReturnType<typeof setTimeout>[] = [];
 function createDoubleClickListener(
   single: () => void,
   double: () => void,
   id: number,
   time: number = 200,
 ) {
-  var clear = (extended = false) => {
+  const clear = (extended = false) => {
     clearTimeout(timeout?.[id]);
     timeout[id] = setTimeout(() => {
       quickEnough[id] = false;
@@ -161,7 +158,6 @@ export default function VideoPlayer(props: {
     };
 
     document.addEventListener("fullscreenchange", fullScreenChanger);
-
     return () => {
       document.removeEventListener("fullscreenchange", fullScreenChanger);
     };
@@ -187,7 +183,7 @@ export default function VideoPlayer(props: {
     context.settings.value.videoBackgroundBloom,
   ]);
   useEffect(() => {
-    const backdropChanger = (_event: Event) => {
+    const backdropChanger = () => {
       const scrollPosition = document.scrollingElement?.scrollTop ?? 0;
       if (lastKnownY > scrollPosition + ScrollTriggerDistance) {
         setDodgeNav(false);
@@ -225,9 +221,9 @@ export default function VideoPlayer(props: {
   useEffect(() => {
     const onOrientationChange = () => {
       if (screen.orientation.type.match(/\w+/)?.[0] === "landscape") {
-        document.body.requestFullscreen();
+        void document.body.requestFullscreen();
       } else {
-        document.exitFullscreen();
+        void document.exitFullscreen();
       }
     };
     screen.orientation.addEventListener("change", onOrientationChange);
@@ -238,7 +234,7 @@ export default function VideoPlayer(props: {
   const subtitleSync = (isSubtitlesEnabledParam: boolean) => {
     if (isSubtitlesEnabledParam) {
       if (!context.playerData.value?.files.subtitles) return;
-      let track = document.createElement("track");
+      const track = document.createElement("track");
       track.kind = "captions";
       track.label = "English";
       track.srclang = "en";
@@ -328,7 +324,7 @@ export default function VideoPlayer(props: {
       onKeyUp={(event) => {
         if (event.altKey || event.ctrlKey || event.shiftKey) return;
         switch (event.code) {
-          case "Digit9":
+          case "Digit9": {
             const lowerVolume = Math.max(0, context.volume.value * 0.8);
             context.volume.set(lowerVolume);
             setForcedVolumeWidth("100px !important");
@@ -340,7 +336,8 @@ export default function VideoPlayer(props: {
             if (context.refVideo.current)
               context.refVideo.current.volume = lowerVolume;
             break;
-          case "Digit0":
+          }
+          case "Digit0": {
             const higherVolume = Math.min(1, context.volume.value * 1.2);
             context.volume.set(higherVolume);
             setForcedVolumeWidth("100px !important");
@@ -352,6 +349,7 @@ export default function VideoPlayer(props: {
             if (context.refVideo.current)
               context.refVideo.current.volume = higherVolume;
             break;
+          }
           case "BracketLeft":
             context.playSpeed.set(
               Math.max(
@@ -421,7 +419,7 @@ export default function VideoPlayer(props: {
         event.stopPropagation();
       }}
     >
-      <div></div>
+      <div />
       {!context.playerData.value ? (
         <Skeleton
           sx={{
@@ -456,7 +454,7 @@ export default function VideoPlayer(props: {
               }}
               width="110"
               height="75"
-            ></canvas>
+            />
             <img
               src={thumbnail}
               style={{
@@ -556,7 +554,7 @@ export default function VideoPlayer(props: {
                         }
                       : {}),
                   }}
-                  width={"100%"}
+                  width="100%"
                   onEnded={
                     context.audioControlled ? undefined : context.actionOnEnded
                   }
@@ -609,8 +607,7 @@ export default function VideoPlayer(props: {
                             e.currentTarget.currentTime -
                               context.refAudio.current?.currentTime,
                           );
-                          if (deSyncGap > 2) {
-                          }
+                          //   if (deSyncGap > 2) {}
                           if (deSyncGap > ERROR_RANGE_SECONDS_RESET) {
                             context.syncAll(
                               context.refAudio.current.currentTime,
@@ -644,7 +641,7 @@ export default function VideoPlayer(props: {
                   onError={
                     context.audioControlled ? undefined : context.actionOnError
                   }
-                ></video>
+                />
                 <Box
                   sx={(theme) => ({
                     position: "absolute",
@@ -663,7 +660,7 @@ export default function VideoPlayer(props: {
                       () => moveVideoPointer(-10, context.playing.value),
                       0,
                     )}
-                  ></div>
+                  />
                   <div
                     style={{ height: "100%", width: "50%" }}
                     onClick={createDoubleClickListener(
@@ -734,7 +731,7 @@ export default function VideoPlayer(props: {
                       () => moveVideoPointer(10, context.playing.value),
                       2,
                     )}
-                  ></div>
+                  />
                 </Box>
                 <Box
                   sx={(theme) => ({
@@ -792,7 +789,7 @@ export default function VideoPlayer(props: {
                   onClick={() => setLastAction(Date.now())}
                   onContextMenu={(event) => event.stopPropagation()}
                 >
-                  <Typography fontSize={"12px"} margin={"auto"} color={"red"}>
+                  <Typography fontSize="12px" margin="auto" color="red">
                     {`${deSyncMessage}${deSyncMessage !== "" && durationError !== "" ? " | " : ""}${durationError}`}
                   </Typography>
                 </Box>
@@ -824,11 +821,7 @@ export default function VideoPlayer(props: {
                   >
                     <div>
                       {fullscreen || props.showInlineTitle ? (
-                        <Typography
-                          fontSize={"24px"}
-                          margin={"auto"}
-                          color={"white"}
-                        >
+                        <Typography fontSize="24px" margin="auto" color="white">
                           {context.playerData.value.title}
                         </Typography>
                       ) : undefined}
@@ -931,7 +924,7 @@ export default function VideoPlayer(props: {
                       <IconButton style={{ color: "white" }}>
                         <FastForwardIcon
                           onClick={() => {
-                            var currentID = 0;
+                            let currentID = 0;
                             for (
                               let i = 0;
                               i < context.playlistContent.value.length;
@@ -1110,7 +1103,7 @@ export default function VideoPlayer(props: {
                       onClick={async () => {
                         try {
                           await document.exitFullscreen();
-                        } catch (error) {
+                        } catch {
                           await document.body.requestFullscreen();
                         }
                       }}
@@ -1272,7 +1265,7 @@ export default function VideoPlayer(props: {
             onClick={async () => {
               try {
                 await document.exitFullscreen();
-              } catch (error) {
+              } catch {
                 await document.body.requestFullscreen();
               }
             }}

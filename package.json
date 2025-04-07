@@ -12,9 +12,6 @@
     "url": "https://github.com/Initial-Link/react-kit/issues"
   },
   "homepage": "https://github.com/Initial-Link/react-kit",
-  "publishConfig": {
-    "registry": "https://www.npmjs.com/~arturwagner"
-  },
   "main": "dist/index.js",
   "module": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -23,18 +20,16 @@
     "node": ">=18"
   },
   "scripts": {
-    "start": "NODE_ENV=development BABEL_ENV=development yarn storybook",
+    "start": "NODE_ENV=development BABEL_ENV=development npm run storybook",
     "build": "rimraf dist && NODE_ENV=production BABEL_ENV=production rollup -c && rimraf dist/components",
-    "lint": "yarn check-types && yarn eslint && yarn stylelint",
-    "lint:fix": "yarn eslint:fix && yarn stylelint:fix",
+    "lint": "npm run check-types && npm run eslint",
+    "lint:fix": "npm run eslint:fix",
     "eslint": "eslint . --report-unused-disable-directives --max-warnings 0",
     "eslint:fix": "eslint . --fix",
-    "stylelint": "stylelint \"**/*.{css,scss,sass}\"",
-    "stylelint:fix": "stylelint \"**/*.{css,scss,sass}\" --fix",
     "check-types": "tsc --noEmit true",
-    "ci": "yarn lint && yarn test --watch=false",
+    "ci": "npm run lint && npm run test --watch=false",
     "test": "vitest --config ./vitest.config.ts",
-    "release": "yarn ci && yarn build && npm publish",
+    "release": "npm run ci && npm run build && npm publish",
     "storybook": "storybook dev -p 6006",
     "storybook:build": "storybook build"
   },

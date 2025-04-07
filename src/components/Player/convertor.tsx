@@ -1,4 +1,4 @@
-import { DEFAULT_MAX_DURATION } from "./PlayerContext";
+import { DEFAULT_MAX_DURATION } from "./PlayerContextProvider";
 function padZero(number: number): string {
   return `${number < 10 ? "0" : ""}${number}`;
 }
@@ -16,5 +16,6 @@ export function parseTimeDuration(time: number | string) {
   const s = number % 60;
   if (m + h === 0) return `0:${padZero(s)}`;
   if (h === 0) return `${m}:${padZero(s)}`;
+
   return `${h}:${padZero(m)}:${padZero(s)}`;
 }

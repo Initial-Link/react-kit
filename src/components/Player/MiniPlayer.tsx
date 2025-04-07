@@ -1,13 +1,6 @@
 import { useContext, useState } from "react";
-import { DEFAULT_MAX_DURATION, PlayerContext } from "./PlayerContext";
 import OndemandVideoIcon from "@mui/icons-material/OndemandVideo";
-
-import Typography from "@mui/material/Typography";
-import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
-import ProgressBar from "./ProgressBar";
 import IconButton from "@mui/material/IconButton";
-
 import PauseIcon from "@mui/icons-material/Pause";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import FastRewindIcon from "@mui/icons-material/FastRewind";
@@ -17,7 +10,11 @@ import VolumeOffIcon from "@mui/icons-material/VolumeOff";
 import RepeatIcon from "@mui/icons-material/Repeat";
 import RepeatOneIcon from "@mui/icons-material/RepeatOne";
 import Backdrop from "@mui/material/Backdrop";
-import { Link } from "@mui/material";
+import { Box, Button, Link, Typography } from "@mui/material";
+
+import { DEFAULT_MAX_DURATION } from "./PlayerContextProvider";
+import { PlayerContext } from "./PlayerContext";
+import ProgressBar from "./ProgressBar";
 
 export default function MiniPlayer() {
   const context = useContext(PlayerContext);
@@ -35,7 +32,7 @@ export default function MiniPlayer() {
   //       context.playing.set(false);
   //     }
   //   }, [context.playerData.value?.id, context.playing.value]);
-  if (!context.miniPlayer.value) return <div></div>;
+  if (!context.miniPlayer.value) return <div />;
   const isOpenAndAllowed = isOpen && context.miniPlayerVisible.value;
   return (
     <>
@@ -108,7 +105,7 @@ export default function MiniPlayer() {
           {context.playlistContent.value.length > 1 ? (
             <IconButton
               onClick={() => {
-                var currentID = 0;
+                let currentID = 0;
                 for (let i = 0; i < context.playlistContent.value.length; i++) {
                   const video = context.playlistContent.value[i];
                   if (
@@ -143,7 +140,7 @@ export default function MiniPlayer() {
           {context.playlistContent.value.length > 1 ? (
             <IconButton
               onClick={() => {
-                var currentID = 0;
+                let currentID = 0;
                 for (let i = 0; i < context.playlistContent.value.length; i++) {
                   const video = context.playlistContent.value[i];
                   if (

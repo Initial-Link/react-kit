@@ -1,6 +1,7 @@
 import Box from "@mui/material/Box";
 import _ from "lodash";
 import React, { useMemo, useRef, useState } from "react";
+
 import { parseTimeDuration } from "./convertor";
 import { videoChapters, videoHeatmap } from "./globals";
 
@@ -28,9 +29,15 @@ export default function ProgressBar(props: {
   const [dragging, setDragging] = useState(false);
   const [timeHover, setTimeHover] = useState<number | null>(null);
   const [chapterHover, setChapterHover] = useState<string | null>(null);
-  const setDraggingTrue = (event: any) => {
+  const setDraggingTrue = (event: unknown) => {
     if (!bar.current) return;
-    event.preventDefault();
+    if (
+      event &&
+      typeof event === "object" &&
+      "preventDefault" in event &&
+      typeof event.preventDefault === "function"
+    )
+      event.preventDefault();
     setDragging(true);
     props.onStartDragging();
     const moveEnd = (event: MouseEvent | TouchEvent) => {
@@ -62,7 +69,7 @@ export default function ProgressBar(props: {
           if (props.chapters && props.chapters.length > 0)
             setChapterHover(
               props.chapters.find(
-                (value, _index, _obj) =>
+                (value) =>
                   value.start_time < currentTime &&
                   value.end_time > currentTime,
               )?.title ?? null,
@@ -78,7 +85,7 @@ export default function ProgressBar(props: {
     setTimeHover(0);
     setChapterHover(null);
   };
-  var requiredSpaceToUse = requiredSpace;
+  let requiredSpaceToUse = requiredSpace;
   if (timeTextRef.current?.offsetWidth || chapterTextRef.current?.offsetWidth) {
     const space = Math.max(
       (timeTextRef.current?.offsetWidth ?? 0) / 2,
@@ -310,7 +317,7 @@ export default function ProgressBar(props: {
             height: "100%",
             width: "100%",
           }}
-        ></div>
+        />
         <div
           style={{
             position: "absolute",
@@ -324,7 +331,7 @@ export default function ProgressBar(props: {
                 : `${(props.bufferVideo / props.max) * 100}%`,
             transition: "width 0.5s ease-out",
           }}
-        ></div>
+        />
         <div
           style={{
             position: "absolute",
@@ -338,7 +345,7 @@ export default function ProgressBar(props: {
                 : `${(props.bufferAudio / props.max) * 100}%`,
             transition: "width 0.5s ease-out",
           }}
-        ></div>
+        />
         <div
           style={{
             position: "absolute",
@@ -350,7 +357,7 @@ export default function ProgressBar(props: {
             width: `${(props.current / props.max) * 100}%`,
             transition: "width 0.5s ease-out",
           }}
-        ></div>
+        />
         {props.main && props.chapters && props.chapters.length > 1
           ? props.chapters.map((chapter, index) => {
               if (index === 0) return undefined;
@@ -365,7 +372,7 @@ export default function ProgressBar(props: {
                     width: "2px",
                     transition: "width 0.5s ease-out",
                   }}
-                ></div>
+                />
               );
             })
           : undefined}
