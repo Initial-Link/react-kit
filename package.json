@@ -29,7 +29,7 @@
     "check-types": "tsc --noEmit true",
     "ci": "npm run lint && npm run test -- --watch=false",
     "test": "vitest --config ./vitest.config.ts",
-    "release": "npm run ci && npm run build && npm publish",
+    "release": "npm run ci && npm run build && npm publish --access public",
     "storybook": "storybook dev -p 6006",
     "storybook:build": "storybook build"
   },
