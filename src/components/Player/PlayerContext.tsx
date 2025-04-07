@@ -3,17 +3,42 @@ import { createContext } from "react";
 import { videoChapters, videoData, videoHeatmap } from "./globals";
 
 export type settings = {
+  /**
+   * @default false
+   */
   autoAudioOnly: boolean;
+  /**
+   * @default true
+   */
   videoBackgroundBloom: boolean;
+  /**
+   * @default false
+   */
   autoPlay: boolean;
+  /**
+   * @default true
+   */
   allowMiniPlayer: boolean;
+  /**
+   * @default false
+   */
+  sticky: boolean;
+  /**
+   * @default 0
+   */
+  stickySpacing: number;
+  /**
+   * @default 0
+   */
+  stickyTriggerDistance: number;
 };
 
 type contextState<k> = {
   value: k;
   set: React.Dispatch<React.SetStateAction<k>>;
 };
-
+export type PlayerPlaylistMetaOverwrite = object;
+export type PlayerVideoMetaOverwrite = object;
 type PlayerContextProps = {
   refVideo: React.RefObject<HTMLVideoElement | null>;
   refAudio: React.RefObject<HTMLAudioElement | null>;
@@ -34,6 +59,19 @@ type PlayerContextProps = {
   videoBuffer: contextState<number>;
   audioBuffer: contextState<number>;
   singleLoop: contextState<boolean>;
+  /**
+   * You can append custom metadata to entries by overwriting the internal interface
+   *
+   * @example
+   * declare module "@initial-link/react-kit" {
+   *   export interface PlayerPlaylistMetaOverwrite {
+   *     uploadTime: number
+   *     anythingElse: any
+   *   }
+   * }
+   *
+   */
+  playlistMeta: contextState<PlayerPlaylistMetaOverwrite | undefined>;
   playlistContent: contextState<videoData[]>;
   chapters: contextState<videoChapters[]>;
   heatmap: contextState<videoHeatmap[]>;

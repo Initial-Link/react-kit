@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { PropsWithChildren, useContext, useState } from "react";
 import OndemandVideoIcon from "@mui/icons-material/OndemandVideo";
 import IconButton from "@mui/material/IconButton";
 import PauseIcon from "@mui/icons-material/Pause";
@@ -16,7 +16,7 @@ import { DEFAULT_MAX_DURATION } from "./PlayerContextProvider";
 import { PlayerContext } from "./PlayerContext";
 import ProgressBar from "./ProgressBar";
 
-export default function MiniPlayer() {
+export default function MiniPlayer({ children }: PropsWithChildren) {
   const context = useContext(PlayerContext);
   const [isOpen, setOpen] = useState(false);
   //   useEffect(() => {
@@ -194,6 +194,7 @@ export default function MiniPlayer() {
         ) : (
           <></>
         )}
+        {children}
       </Box>
     </>
   );
