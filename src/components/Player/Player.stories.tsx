@@ -1,11 +1,12 @@
-import React, { useState } from "react";
-
+import { useState } from "react";
 import { Meta, StoryObj } from "@storybook/react";
-import AudioHolder from "./AudioHolder";
-import { PlayerContextProvider, usePlayer } from "./PlayerContext";
-import VideoPlayer from "./VideoPlayer";
 import { Button } from "@mui/material";
+
+import { PlayerContextProvider } from "./PlayerContextProvider";
+import { usePlayer } from "./usePlayer";
 import { videoData } from "./globals";
+import AudioHolder from "./AudioHolder";
+import VideoPlayer from "./VideoPlayer";
 
 const meta: Meta<typeof VideoPlayer> = {
   component: VideoPlayer,
@@ -112,10 +113,10 @@ export const ContextUsage: Story = {
   render: () => (
     <PlayerContextProvider
       touchHistory={(video) => {
-        console.log(`touchHistory`, video);
+        console.info(`touchHistory`, video);
       }}
       navigate={(video) => {
-        console.log(`navigate`, video);
+        console.info(`navigate`, video);
       }}
     >
       <App />

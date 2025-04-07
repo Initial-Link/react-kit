@@ -1,9 +1,9 @@
 import { useContext } from "react";
+
 import { PlayerContext } from "./PlayerContext";
 
 export default function AudioHolder() {
   const context = useContext(PlayerContext);
-
   return (
     <div style={{ display: "none" }}>
       {context.playerData.value ? (
@@ -42,7 +42,7 @@ export default function AudioHolder() {
               : undefined
           }
           onError={context.audioControlled ? context.actionOnError : undefined}
-        ></audio>
+        />
       ) : (
         <></>
       )}
