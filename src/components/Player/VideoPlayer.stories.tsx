@@ -171,7 +171,17 @@ export const StickyMobilePlayer: Story = {
     },
   },
   render: () => (
-    <PlayerContextProvider initialSettings={{ sticky: true }}>
+    <PlayerContextProvider
+      settings={{
+        autoAudioOnly: false,
+        autoPlay: false,
+        videoBackgroundBloom: true,
+        allowMiniPlayer: true,
+        sticky: true, // changed
+        stickySpacing: 0,
+        stickyTriggerDistance: 0,
+      }}
+    >
       <Box sx={{ height: "200vh" }}>
         <VideoPlayer
           videoData={{

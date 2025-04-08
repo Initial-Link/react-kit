@@ -2,7 +2,7 @@ name: react-kit
 
 on:
   pull_request:
-    branches: [main]
+    branches: [main, dev]
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
@@ -23,4 +23,4 @@ jobs:
 
       - name: Run Continuous Integration
         run: |
-          npm ci
+          npm run ci
