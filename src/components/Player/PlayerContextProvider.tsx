@@ -15,19 +15,24 @@ export const PlayerContextProvider = (
   props: PropsWithChildren<{
     touchHistory?: (video: videoData) => void;
     navigate?: (link: videoData) => void;
-    initialSettings?: Partial<settings>;
+    /**
+     * If passed, context will use this as the settings.
+     *
+     * Setter will no longer be effective. This value must be updated for changes to take effect.
+     */
+    settings?: settings;
   }>,
 ) => {
   const refVideo = useRef<HTMLVideoElement>(null);
   const refAudio = useRef<HTMLAudioElement>(null);
   const [settings, setSettings] = useState<settings>({
-    autoAudioOnly: props.initialSettings?.autoAudioOnly ?? false,
-    autoPlay: props.initialSettings?.autoPlay ?? false,
-    videoBackgroundBloom: props.initialSettings?.videoBackgroundBloom ?? true,
-    allowMiniPlayer: props.initialSettings?.allowMiniPlayer ?? true,
-    sticky: props.initialSettings?.sticky ?? false,
-    stickySpacing: props.initialSettings?.stickySpacing ?? 0,
-    stickyTriggerDistance: props.initialSettings?.stickyTriggerDistance ?? 0,
+    autoAudioOnly: false,
+    autoPlay: false,
+    videoBackgroundBloom: true,
+    allowMiniPlayer: true,
+    sticky: false,
+    stickySpacing: 0,
+    stickyTriggerDistance: 0,
   });
   const [audioOnly, setAudioOnly] = useState(false);
   const [sourceOverride, setSourceOverride] = useState("");
@@ -221,7 +226,7 @@ export const PlayerContextProvider = (
         playSpeed: { value: playSpeed, set: setPlaySpeed },
         distortAudio: { value: distortAudio, set: setDistortAudio },
         playerData: { value: playerData, set: setPlayerData },
-        settings: { value: settings, set: setSettings },
+        settings: { value: props.settings ?? settings, set: setSettings },
         audioOnly: {
           value: audioOnly,
           set: (state) => {

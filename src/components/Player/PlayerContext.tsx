@@ -37,8 +37,10 @@ type contextState<k> = {
   value: k;
   set: React.Dispatch<React.SetStateAction<k>>;
 };
-export type PlayerPlaylistMetaOverwrite = object;
-export type PlayerVideoMetaOverwrite = object;
+// eslint-disable-next-line
+export interface PlayerPlaylistMetaOverwrite {}
+// eslint-disable-next-line
+export interface PlayerVideoMetaOverwrite {}
 type PlayerContextProps = {
   refVideo: React.RefObject<HTMLVideoElement | null>;
   refAudio: React.RefObject<HTMLAudioElement | null>;
