@@ -8,7 +8,8 @@ export default function AudioHolder() {
     <div style={{ display: "none" }}>
       {context.playerData.value ? (
         <audio
-          ref={context.refAudio}
+          // eslint-disable-next-line
+          ref={context.refAudio as any}
           src={
             context.audioControlled
               ? context.sourceOverride.value

@@ -537,7 +537,8 @@ export default function VideoPlayer(props: {
               <>
                 <video
                   id="Player"
-                  ref={context.refVideo}
+                  // eslint-disable-next-line
+                  ref={context.refVideo as any}
                   muted={
                     context.audioOnly.value
                       ? true
