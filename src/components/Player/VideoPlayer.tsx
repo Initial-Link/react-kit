@@ -1068,8 +1068,6 @@ export default function VideoPlayer(props: {
                         <IconButton
                           style={{
                             color: "white",
-                            display:
-                              props.subtitles.length === 0 ? "none" : undefined,
                           }}
                           onClick={() => {
                             subtitleSync(!isSubtitlesEnabled);
@@ -1268,7 +1266,11 @@ export default function VideoPlayer(props: {
                 }}
                 sx={{
                   justifyContent: "left",
-                  display: props.subtitles.length === 0 ? "none" : undefined,
+                  display:
+                    context.playerData.value?.files.subtitles?.length ===
+                    undefined
+                      ? "none"
+                      : undefined,
                 }}
               >
                 Toggle Subtitles
